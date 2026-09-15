@@ -29,7 +29,7 @@ jobs:
             node_modules
           key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
       - run: bun install --frozen-lockfile
-      - run: bunx biome check
+      - run: bun run check:ci
 
   test-typecheck:
     runs-on: ubuntu-latest

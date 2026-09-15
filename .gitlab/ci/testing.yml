@@ -18,7 +18,7 @@ variables:
 test:lint:
   stage: test
   script:
-    - bunx biome check
+    - bun run check:ci
 
 test:typecheck:
   stage: test
