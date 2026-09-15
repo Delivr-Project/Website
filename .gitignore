@@ -44,5 +44,6 @@ tmp-data-*
 
 # Backend data & config (keep examples)
 data/
+!app/data/
 config/*
 !config/*.example.json
