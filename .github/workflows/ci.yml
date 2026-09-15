@@ -1,7 +1,8 @@
-# CI workflow for GitHub-hosted LeiCraftMC projects.
-# Runs biome, typecheck, and tests on every push/PR to main.
+# GitHub Actions CI/CD for Delivr Website.
+# Mirrors the GitLab CI setup: parallel test jobs on every push/PR,
+# then build + rsync deploy only on the default branch (main).
 
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -9,15 +10,81 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  BUN_INSTALL_CACHE_DIR: .bun/install/cache
+  NUXT_TELEMETRY_DISABLED: "1"
+
 jobs:
-  test:
+  test-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+      - uses: actions/cache@v4
+        with:
+          path: |
+            .bun/install/cache
+            node_modules
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
       - run: bun install --frozen-lockfile
       - run: bunx biome check
+
+  test-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/cache@v4
+        with:
+          path: |
+            .bun/install/cache
+            node_modules
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+      - run: bun install --frozen-lockfile
       - run: bun run typecheck
+
+  test-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/cache@v4
+        with:
+          path: |
+            .bun/install/cache
+            node_modules
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+      - run: bun install --frozen-lockfile
       - run: bun test
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    needs: [test-lint, test-typecheck, test-unit]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    env:
+      DEPLOY_REMOTE_USER: ${{ secrets.DEPLOY_REMOTE_USER }}
+      DEPLOY_REMOTE_PASSWORD: ${{ secrets.DEPLOY_REMOTE_PASSWORD }}
+      DEPLOY_REMOTE_HOST: ${{ secrets.DEPLOY_REMOTE_HOST }}
+      DEPLOY_REMOTE_DIR: ${{ secrets.DEPLOY_REMOTE_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/cache@v4
+        with:
+          path: |
+            .bun/install/cache
+            node_modules
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+      - run: sudo apt update && sudo apt install -y rsync sshpass openssh-client
+      - run: bun install --frozen-lockfile
+      - run: bun run generate
+      - run: echo "Deploying to production"
+      - run: .gitlab/ci/deploy.sh
