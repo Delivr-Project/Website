@@ -1,0 +1,31 @@
+/*
+ * main.css — Tailwind v4 CSS-first entry (no tailwind.config.js).
+ *
+ * Dark-only (no light theme, no toggle) — `colorMode: { preference: "dark",
+ * fallback: "dark", classSuffix: "" }` is pinned in nuxt.config.ts. Delivr's
+ * brand background is pure black (see style-guide docs/15-design-system.md).
+ * `@plugin "@tailwindcss/typography"` enables `prose` styling for docs text.
+ */
+@import "tailwindcss";
+@import "@nuxt/ui";
+@plugin "@tailwindcss/typography";
+
+@theme {
+	--font-sans: "Rubik", sans-serif;
+}
+
+/* ===========================
+   Base & Reset Styles
+   =========================== */
+
+:root {
+	color-scheme: dark;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+.main-bg-color {
+	background-color: rgb(0 0 0);
+}

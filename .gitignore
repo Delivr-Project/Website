@@ -1,0 +1,48 @@
+# Node
+node_modules
+
+# Dev / Build / compile output
+.output
+.data
+.nuxt
+.nitro
+.cache
+build/
+out/
+dist
+*.tgz
+
+# Drizzle artifacts
+.drizzle
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage
+*.lcov
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor / OS
+.DS_Store
+.fleet
+.idea
+
+# Environment
+.env
+.env.*
+!.env.example
+
+#Tests
+tmp-data-*
+
+# Backend data & config (keep examples)
+data/
+config/*
+!config/*.example.json

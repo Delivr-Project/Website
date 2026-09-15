@@ -1,0 +1,39 @@
+# 1. Kill the default Apache behavior
+DirectorySlash Off
+Options -Indexes
+RewriteEngine On
+RewriteBase /
+
+# 1.5. ACME / WELL-KNOWN BYPASS
+# Do not rewrite or redirect anything under /.well-known/ (e.g. Let's Encrypt)
+RewriteRule ^\.well-known/ - [L]
+
+# 2. THE LOOP PREVENTER
+# If we have already rewritten to index.html, STOP EVERYTHING.
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{ENV:REDIRECT_STATUS} 200
+RewriteRule ^ - [L]
+
+# 3. EXTERNAL REDIRECT: Remove trailing slash
+# We exclude existing files to prevent breaking assets (css/js)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} ^/(.+)/$
+RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+# 4. EXTERNAL REDIRECT: Remove index.html from URL
+RewriteCond %{THE_REQUEST} /index\.html [NC]
+RewriteRule ^(.*)index\.html$ /$1 [R=301,L]
+
+# 5. INTERNAL REWRITE: Serve the content (Nitro style)
+# This serves /folder/index.html when the user types /folder
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME}/index.html -f
+RewriteRule ^(.*)$ $1/index.html [END]
+
+# 6. INTERNAL REWRITE: Handle flat .html files
+# This serves /about.html when the user types /about
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [END]
+
+ErrorDocument 404 /404.html

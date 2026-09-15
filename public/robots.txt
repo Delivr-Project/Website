@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+sitemap: https://www.delivr.email/utils/sitemap.xml

@@ -1,0 +1,25 @@
+# .gitlab/ci/build.yml — build stage.
+# Generic build job; override artifacts/paths per project (Nuxt .output/, backend build/bin/, etc.).
+
+build_and_deploy_pages:
+
+  stage: build_and_deploy
+
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always    # You can make it manual or automatic
+      allow_failure: false
+    - when: never
+
+  before_script:
+
+    - apt update && apt upgrade -y
+    - apt install -y rsync sshpass openssh-client
+    - bun install --frozen-lockfile
+
+  script:
+    - bun run generate
+
+    - echo "Deploying to production & $CI_PAGES_URL"
+
+    - .gitlab/ci/deploy.sh

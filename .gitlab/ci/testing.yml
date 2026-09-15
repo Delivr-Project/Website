@@ -1,0 +1,31 @@
+default:
+  image: oven/bun
+  interruptible: true
+  cache:
+    key:
+      files:
+        - bun.lock
+    paths:
+      - .bun/install/cache/
+      - node_modules/
+  before_script:
+    - bun install --frozen-lockfile
+
+variables:
+  BUN_INSTALL_CACHE_DIR: .bun/install/cache
+  NUXT_TELEMETRY_DISABLED: "1"
+
+test:lint:
+  stage: test
+  script:
+    - bunx biome check
+
+test:typecheck:
+  stage: test
+  script:
+    - bun run typecheck
+
+test:unit:
+  stage: test
+  script:
+    - bun test
