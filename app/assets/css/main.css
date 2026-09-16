@@ -11,7 +11,7 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-	--font-sans: "Rubik", sans-serif;
+	--font-sans: "Public Sans", sans-serif;
 }
 
 /* ===========================

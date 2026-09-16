@@ -5,6 +5,8 @@ navigation:
   title: API Overview
 ---
 
+# API Overview
+
 Delivr API is the heart of the project: a Bun + Hono backend that talks to your mail server, serves a first-class OpenAPI spec, and powers the Delivr Web client.
 
 ## Base URL and versioning
@@ -62,3 +64,21 @@ The generated files in `app/api-client/` are committed but never edited by hand.
 ## Mail-server credentials
 
 When a user adds a mail account, Delivr encrypts the IMAP/SMTP credentials with **ECC cryptography** using the `DLA_ENCRYPTION_KEY`. The plaintext credentials are never written to disk.
+
+## Explore the API
+
+::link-button-group
+---
+buttons:
+  - to: https://github.com/Delivr-Project/Delivr-API
+    icon: i-lucide-github
+    label: Delivr API on GitHub
+    color: primary
+    target: _blank
+  - to: /docs/self-hosting
+    icon: i-lucide-server
+    label: Self-Hosting Guide
+    color: neutral
+    variant: outline
+---
+::

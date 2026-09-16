@@ -5,6 +5,8 @@ navigation:
   title: About Delivr
 ---
 
+# About Delivr
+
 Delivr is a next-generation email client for personal and professional team use. It connects
 to your existing email server over standard IMAP and SMTP, so your data stays where you want it —
 while the experience feels modern, fast, and native.
@@ -30,6 +32,8 @@ Delivr is split into two repositories that work together:
 1. The browser loads **Delivr Web** from your chosen public URL. It handles login, the mail UI, and settings.
 2. The web app calls **Delivr API** for every mail operation. The API authenticates the user, encrypts mail-server credentials, and proxies IMAP/SMTP traffic.
 3. The API fetches live mail data from your configured **IMAP/SMTP server**, so nothing proprietary sits between you and your email.
+
+:architecture-diagram
 
 ## Project values
 

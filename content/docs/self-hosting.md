@@ -5,6 +5,8 @@ navigation:
   title: Self-Hosting Guide
 ---
 
+# Self-Hosting Delivr
+
 Delivr is designed to be self-hosted in minutes. This guide covers the API backend, the web client, database setup, and a few production notes.
 
 ## Prerequisites
@@ -72,7 +74,7 @@ The web client runs on port **14128** by default.
 Delivr Web uses a generated type-safe client from the API's OpenAPI spec. When the API changes, keep the client up to date:
 
 ```bash
-# Start the Delivr API first, then:
+# Start the Delivr API first
 bun run api-client:generate
 ```
 

@@ -63,11 +63,16 @@ export default defineNuxtConfig({
 
 	css: ["~/assets/css/main.css"],
 
+	routeRules: {
+		"/__nuxt_content/**": { prerender: false },
+	},
+
 	nitro: {
 		preset: "static",
 		prerender: {
 			crawlLinks: true,
 			routes: ["/"],
+			ignore: ["/__nuxt_content/**"],
 		},
 	},
 

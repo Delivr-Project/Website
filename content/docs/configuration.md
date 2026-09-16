@@ -5,6 +5,8 @@ navigation:
   title: Configuration Reference
 ---
 
+# Configuration Reference
+
 Delivr is configured entirely through environment variables. This page lists every option for both Delivr API and Delivr Web.
 
 ## Delivr API environment variables
