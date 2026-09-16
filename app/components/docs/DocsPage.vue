@@ -48,12 +48,10 @@ const nextPage = computed<DocsPage | null>(() =>
 
 		<!-- Content -->
 		<div class="min-w-0 flex-1">
-			<div class="prose prose-invert max-w-none">
-				<slot />
-			</div>
+			<slot />
 
 			<!-- Prev / Next -->
-			<div class="mt-12 flex flex-col gap-4 border-t border-slate-800 pt-8 not-prose sm:flex-row sm:justify-between">
+			<div class="not-prose mt-12 flex flex-col gap-4 border-t border-slate-800 pt-8 sm:flex-row sm:justify-between">
 				<NuxtLink
 					v-if="prevPage"
 					:to="prevPage.to"
