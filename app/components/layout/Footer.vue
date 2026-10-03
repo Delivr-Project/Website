@@ -1,24 +1,42 @@
 <script setup lang="ts">
 import type { FooterColumn } from "@nuxt/ui";
 import DelivrLogo from "~/components/img/DelivrLogo.vue";
+import { githubOrgUrl } from "~/data/project";
 
 const socialLinks = [
 	{
 		icon: "i-lucide-github",
-		to: "https://github.com/Delivr-Project",
+		to: githubOrgUrl,
 		label: "GitHub",
+	},
+	{
+		icon: "i-lucide-mail",
+		to: "mailto:support@delivr.email",
+		label: "Email",
 	},
 ];
 
-const resourceLinks = [
+const productLinks = [
+	{ label: "Features", to: "/#features", target: undefined },
+	{ label: "Philosophy", to: "/about", target: undefined },
+	{ label: "Security", to: "/security", target: undefined },
+	{ label: "Roadmap", to: "/roadmap", target: undefined },
+];
+
+const docsLinks = [
 	{ label: "Documentation", to: "/docs", target: undefined },
 	{ label: "Self-Hosting Guide", to: "/docs/self-hosting", target: undefined },
+	{ label: "Reverse Proxy", to: "/docs/self-hosting/reverse-proxy", target: undefined },
+	{ label: "Configuration", to: "/docs/configuration", target: undefined },
 	{ label: "API Overview", to: "/docs/api", target: undefined },
 ];
 
-const projectLinks = [
+const communityLinks = [
+	{ label: "Open Source", to: "/open-source", target: undefined },
+	{ label: "Contributing", to: "/docs/contributing", target: undefined },
 	{ label: "Delivr Web", to: "https://github.com/Delivr-Project/Delivr-Web", target: "_blank" },
 	{ label: "Delivr API", to: "https://github.com/Delivr-Project/Delivr-API", target: "_blank" },
+	{ label: "Report a Vulnerability", to: "/security#disclosure", target: undefined },
 ];
 
 const legalLinks = [
@@ -27,8 +45,9 @@ const legalLinks = [
 ];
 
 const footerColumns: FooterColumn[] = [
-	{ label: "Resources", children: resourceLinks },
-	{ label: "Project", children: projectLinks },
+	{ label: "Product", children: productLinks },
+	{ label: "Docs", children: docsLinks },
+	{ label: "Community", children: communityLinks },
 	{ label: "Legal", children: legalLinks },
 ];
 
@@ -47,17 +66,17 @@ const currentYear = new Date().getFullYear();
 		<UFooterColumns
 			:columns="footerColumns"
 			:ui="{
-				root: 'grid gap-8 sm:grid-cols-2 xl:grid-cols-2 w-full',
-				center: 'xl:col-span-1 grid',
+				root: 'grid gap-10 xl:grid-cols-3 w-full',
+				center: 'grid grid-flow-row auto-cols-auto grid-cols-2 gap-8 md:grid-cols-4 xl:col-span-2 *:min-w-0',
 				label: 'text-slate-100 font-semibold text-base',
-				link: 'text-slate-400 hover:text-sky-400 text-sm sm:text-base inline-block py-1 transition-colors',
+				link: 'text-slate-400 hover:text-sky-400 text-sm sm:text-base flex max-w-full py-1 transition-colors',
 				left: 'mb-0',
 			}"
 		>
 			<template #left>
 				<div class="space-y-4">
 					<DelivrLogo class="h-5 w-auto" />
-					<p class="text-slate-300/80 text-base leading-relaxed md:max-w-3xl">
+					<p class="text-slate-300/80 text-base leading-relaxed md:max-w-md">
 						A mail client that actually Delivers — a next-generation, open-source email client for
 						personal and professional team use, compatible with any email server.
 					</p>
@@ -66,7 +85,7 @@ const currentYear = new Date().getFullYear();
 							v-for="social in socialLinks"
 							:key="social.label"
 							:to="social.to"
-							target="_blank"
+							:target="social.to.startsWith('http') ? '_blank' : undefined"
 							:icon="social.icon"
 							color="neutral"
 							variant="ghost"

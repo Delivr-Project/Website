@@ -1,90 +1,102 @@
 ---
 title: "Self-Hosting Delivr"
-description: "Step-by-step guide to self-hosting Delivr: install the API, configure your database, run the web client, and go to production."
+description: "Plan your Delivr deployment: requirements, deployment options, domains, ports, and how the API and the web client fit together."
 navigation:
-  title: Self-Hosting Guide
+  title: Overview & Requirements
 ---
 
 # Self-Hosting Delivr
 
-Delivr is designed to be self-hosted in minutes. This guide covers the API backend, the web client, database setup, and a few production notes.
+Delivr is built to be self-hosted. A complete instance is just **two small services** — the API and the web client — that sit behind your reverse proxy and connect to the mail servers your users already have.
 
-## Prerequisites
+This page helps you plan a deployment. When you're ready, follow one of the installation guides.
 
-- [Bun 1.x](https://bun.sh) installed on the server.
-- An email account or server reachable over IMAP (read) and SMTP (send).
-- A public domain and reverse proxy if you want HTTPS in production.
+::card-group
+  ::card{title="Docker Compose" icon="i-lucide-container" to="/docs/self-hosting/docker"}
+  **Recommended.** Run the official container images with one Compose file.
+  ::
 
-## 1. Delivr API
+  ::card{title="Manual installation" icon="i-lucide-terminal" to="/docs/self-hosting/manual"}
+  Run with Bun or the standalone binary, managed by systemd.
+  ::
+::
 
-Clone the repository, install dependencies, configure the environment, and run migrations.
+## What you are deploying
 
-```bash
-# Clone and install
-git clone https://github.com/Delivr-Project/Delivr-API.git
-cd Delivr-API
-cp example.env .env
-bun install
+| Component | What it does | Default port | Image |
+| --- | --- | --- | --- |
+| **Delivr API** | Authenticates users, stores encrypted mail-account credentials, and talks IMAP/SMTP to mail servers. Serves the REST API under `/v1`. | `14123` | `ghcr.io/delivr-project/delivr-api` |
+| **Delivr Web** | Serves the web app / PWA that users open in their browser. | `14128` | `ghcr.io/delivr-project/delivr-web` |
+| **Reverse proxy** *(yours)* | Terminates HTTPS and forwards traffic to both services. | `443` | Caddy, Nginx, Traefik, … |
 
-# Run migrations (SQLite by default)
-bun run db:sqlite:migrate
+Delivr does **not** include a mail server. Each user connects their own mailboxes over IMAP and SMTP — whether that's a hosting provider, a company mail server, or a server you run yourself.
 
-# Start the dev server on port 14123
-bun run dev
-```
+:architecture-diagram
 
-### Required environment variables
+## Requirements
 
-- `DLA_ENCRYPTION_KEY` — a 32-character key used to encrypt mail-server credentials. Keep it secret and back it up; losing it means losing access to stored mail account credentials.
-- `DLA_APP_URL` — the public URL of your Delivr Web client, e.g. `https://app.delivr.email`.
+### Server
 
-### Database options
+- A Linux server with **1 vCPU and 1 GB RAM** — plenty for a family or a small team. The container images are built for **x86-64**; on ARM64, use the [manual installation](/docs/self-hosting/manual).
+- **Docker Engine 24+** with the Compose plugin, *or* [Bun 1.x](https://bun.sh) for a manual install.
+- A few hundred MB of disk. Delivr does not store mail, so the database stays small.
 
-SQLite is the default and works out of the box. For heavier deployments you can use PostgreSQL or MySQL:
+### Network
 
-- SQLite: set `DLA_DB_CONNECTION_URL=./data/db.sqlite`.
-- PostgreSQL/MySQL: update `DLA_DB_CONNECTION_URL` and run the matching migration commands.
+- **Two DNS names** pointing at your server, for example:
+  - `mail.example.com` → the web client
+  - `api.mail.example.com` → the API
+- Ports **80 and 443** open to the internet for your reverse proxy (and for obtaining TLS certificates).
+- **Outbound access** from the API to your users' mail servers — usually IMAP on `993` and SMTP on `465` or `587`.
 
-### API ports and docs
+::tip
+Not sure about domains yet? Any two hostnames work — they don't have to be subdomains of each other. `webmail.example.org` and `delivr-api.example.org` are just as fine.
+::
 
-By default the API listens on port **14123**. The interactive [Scalar](https://scalar.com) OpenAPI reference is available at `/docs/v1`, and the raw spec at `/docs/v1/openapi`.
+### Optional
 
-## 2. Delivr Web
+- An **SMTP account for system mail** (for example `noreply@example.com`) so Delivr can send password-reset emails. See [System email](/docs/configuration#system-email-smtp).
 
-The web client is a Nuxt 4 app that talks to the API. Point it at the running API, install dependencies, and start it.
+## How the pieces connect
 
-```bash
-# Clone and install
-git clone https://github.com/Delivr-Project/Delivr-Web.git
-cd Delivr-Web
-cp example.env .env
+Understanding this saves most of the troubleshooting later:
 
-# Edit .env:
-# DELIVR_API_URL=https://api.example.com/v1
-# DELIVR_APP_URL=https://app.example.com
+1. The **browser** loads the web app from `https://mail.example.com`.
+2. The web app then calls the API **directly from the browser** at `https://api.mail.example.com/v1`. This is why the API URL you configure for the web client must be a **public** URL, not a Docker-internal hostname.
+3. Because the app and the API live on different origins, the API only accepts browser requests from the origin set in `DLA_APP_URL`. It must match the web client's URL **exactly** — scheme, host, and port, with no trailing slash.
+4. The **API** connects to each user's IMAP/SMTP server over TLS and streams mail back. Nothing is cached on disk.
 
-bun install
-bun run dev
-```
+::note
+The web client's server also calls the API to stream attachment previews, using the same public API URL. Make sure the web container can resolve and reach your public API domain (hairpin NAT), which is normally the case.
+::
 
-The web client runs on port **14128** by default.
+## Choosing a database
 
-### Regenerating the API client
+Delivr uses **SQLite** by default. The database only holds users, sessions, encrypted credentials, and preferences — no mail — so SQLite comfortably serves small and medium instances and makes backups as simple as copying a file.
 
-Delivr Web uses a generated type-safe client from the API's OpenAPI spec. When the API changes, keep the client up to date:
+Support for PostgreSQL and MySQL is [on the roadmap](/roadmap).
 
-```bash
-# Start the Delivr API first
-bun run api-client:generate
-```
+## Checklist before you start
 
-Never hand-edit the generated `*.gen.ts` files.
+- [ ] Server with Docker (or Bun) installed
+- [ ] DNS records for the web and API domains
+- [ ] A reverse proxy that can obtain TLS certificates
+- [ ] A securely generated encryption key: `openssl rand -hex 32`
+- [ ] *(Optional)* SMTP credentials for system mail
 
-## 3. Production checklist
+## Next steps
 
-- Run the API behind an HTTPS reverse proxy.
-- Set `DLA_APP_URL` and `DELIVR_APP_URL` to your public HTTPS URLs.
-- Keep `DLA_ENCRYPTION_KEY` safe; it is needed to decrypt stored credentials.
-- Back up the database directory and the API's `data/` folder.
-- Configure outbound SMTP (`DLA_SMTP_*`) if you want password-reset and other system emails.
-- Build the static docs site with `bun run generate` if you also deploy this website.
+::link-button-group
+---
+buttons:
+  - to: /docs/self-hosting/docker
+    icon: i-lucide-container
+    label: Install with Docker
+    color: primary
+  - to: /docs/self-hosting/reverse-proxy
+    icon: i-lucide-network
+    label: Set up the reverse proxy
+    color: neutral
+    variant: outline
+---
+::

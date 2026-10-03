@@ -63,6 +63,23 @@ export default defineNuxtConfig({
 
 	css: ["~/assets/css/main.css"],
 
+	// Static site: bundle every icon the site uses, so no icon is ever fetched from a
+	// third-party API at runtime. Nuxt UI's built-in icons are picked up from its dist.
+	icon: {
+		provider: "none",
+		fallbackToApi: false,
+		clientBundle: {
+			scan: {
+				globInclude: [
+					"app/**/*.{vue,ts}",
+					"content/**/*.md",
+					"node_modules/@nuxt/ui/dist/shared/*.mjs",
+				],
+				globExclude: [".nuxt", ".output", "dist"],
+			},
+		},
+	},
+
 	routeRules: {
 		"/__nuxt_content/**": { prerender: false },
 	},

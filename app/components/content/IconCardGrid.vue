@@ -33,16 +33,14 @@ const { cards = [] } = defineProps<{
 					{{ card.title }}
 				</h3>
 				<p class="text-sm text-slate-400">{{ card.description }}</p>
-				<NuxtLink
+				<!-- The whole card is already the link; a nested <a> would be invalid HTML. -->
+				<span
 					v-if="card.to && card.target === '_blank'"
-					:to="card.to"
-					target="_blank"
-					class="mt-1 inline-flex items-center gap-1 text-sm text-sky-400 hover:underline"
-					@click.stop
+					class="mt-1 inline-flex items-center gap-1 text-sm text-sky-400 group-hover:underline"
 				>
 					GitHub
 					<UIcon name="i-lucide-external-link" class="text-xs" />
-				</NuxtLink>
+				</span>
 			</div>
 		</NuxtLink>
 	</div>

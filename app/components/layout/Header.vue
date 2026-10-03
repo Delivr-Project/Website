@@ -1,26 +1,43 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
 import DelivrLogo from "~/components/img/DelivrLogo.vue";
+import { githubOrgUrl } from "~/data/project";
+
+const route = useRoute();
 
 const links = computed<NavigationMenuItem[]>(() => [
 	{
 		label: "Features",
 		to: "/#features",
+		active: route.path === "/" && route.hash === "#features",
 	},
 	{
-		label: "Self-Hosting",
-		to: "/docs/self-hosting",
+		label: "Philosophy",
+		to: "/about",
+	},
+	{
+		label: "Security",
+		to: "/security",
+	},
+	{
+		label: "Open Source",
+		to: "/open-source",
+	},
+	{
+		label: "Roadmap",
+		to: "/roadmap",
 	},
 	{
 		label: "Docs",
 		to: "/docs",
+		active: route.path.startsWith("/docs"),
 	},
 ]);
 
 const socialLinks = [
 	{
 		icon: "i-lucide-github",
-		to: "https://github.com/Delivr-Project",
+		to: githubOrgUrl,
 		label: "GitHub",
 	},
 ];
@@ -37,11 +54,10 @@ const mobileLinks = computed<NavigationMenuItem[][]>(() => [
 </script>
 
 <template>
-	<UHeader class="backdrop-blur-xl">
+	<!-- UHeader wraps the title slot in its own link to `to`, so the slot holds only the logo. -->
+	<UHeader class="backdrop-blur-xl" title="Delivr — Home" to="/">
 		<template #title>
-			<NuxtLink to="/" class="flex items-center gap-1.5" aria-label="Delivr — Home">
-				<DelivrLogo class="h-6 w-auto" />
-			</NuxtLink>
+			<DelivrLogo class="h-6 w-auto" />
 		</template>
 
 		<UNavigationMenu :items="[links]" />
@@ -65,8 +81,8 @@ const mobileLinks = computed<NavigationMenuItem[][]>(() => [
 					class="hover:scale-110 transition-transform duration-200"
 				/>
 			</div>
-			<UButton to="/docs" color="primary" variant="solid" class="font-medium">
-				Read the Docs
+			<UButton to="/docs/self-hosting" color="primary" variant="solid" class="font-medium">
+				Get Started
 			</UButton>
 		</template>
 	</UHeader>

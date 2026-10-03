@@ -29,3 +29,24 @@ html {
 .main-bg-color {
 	background-color: rgb(0 0 0);
 }
+
+/* ===========================
+   Docs prose
+   =========================== */
+
+/* Nuxt UI prose headings wrap their text in an anchor link — don't underline it like body links. */
+.prose :where(h1, h2, h3, h4) a {
+	text-decoration: none;
+}
+
+/* Nuxt UI styles inline code itself; drop the typography plugin's literal backticks. */
+.prose :where(code)::before,
+.prose :where(code)::after {
+	content: none;
+}
+
+/* Let long inline code (URLs, env assignments) wrap on narrow screens. */
+.prose :where(:not(pre) > code) {
+	max-width: 100%;
+	overflow-wrap: anywhere;
+}

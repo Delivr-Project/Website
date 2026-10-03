@@ -1,8 +1,14 @@
 <script setup lang="ts">
 const route = useRoute();
+
+const slug = computed(() => {
+	const param = route.params.slug;
+	return Array.isArray(param) ? param.join("/") : (param ?? "");
+});
+
 const { data: page } = await useAsyncData(route.path, () =>
 	queryCollection("docs")
-		.path(`/docs/${route.params.slug?.toString() || ""}`)
+		.path(slug.value ? `/docs/${slug.value}` : "/docs")
 		.first(),
 );
 
@@ -22,7 +28,7 @@ usePageSeo({
 </script>
 
 <template>
-	<DocsPage>
+	<DocsPage :toc="page?.body?.toc?.links ?? []" :source-path="page?.stem">
 		<ContentRenderer
 			v-if="page"
 			:value="page"

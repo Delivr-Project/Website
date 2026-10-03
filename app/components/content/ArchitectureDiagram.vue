@@ -29,7 +29,7 @@ const nodes: Node[] = [
 				>
 					<UIcon name="i-lucide-arrow-right" class="hidden text-xl sm:block" />
 					<UIcon name="i-lucide-arrow-down" class="text-xl sm:hidden" />
-					<span class="text-xs">{{ index === 0 ? "HTTPS + JWT" : "IMAP + SMTP" }}</span>
+					<span class="text-xs">{{ index === 0 ? "HTTPS + token" : "IMAP + SMTP" }}</span>
 				</div>
 			</template>
 		</div>

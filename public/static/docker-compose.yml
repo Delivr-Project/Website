@@ -1,0 +1,54 @@
+# Delivr — full stack (API + web client)
+# Guide: https://www.delivr.email/docs/self-hosting/docker
+#
+# Before the first start, replace every value marked "CHANGE ME":
+#   - mail.example.com      → the domain of the web client
+#   - api.mail.example.com  → the domain of the API
+#   - DLA_ENCRYPTION_KEY    → output of `openssl rand -hex 32`
+
+services:
+  delivr-api:
+    image: ghcr.io/delivr-project/delivr-api:latest
+    container_name: delivr-api
+    restart: unless-stopped
+    ports:
+      # Only reachable from this host — publish it through your reverse proxy.
+      - "127.0.0.1:14123:14123"
+    environment:
+      # Public URL of the web client (no trailing slash). Used for CORS and setup links.
+      DLA_APP_URL: "https://mail.example.com" # CHANGE ME
+
+      # At least 32 random characters. Back it up — without it, stored
+      # mail-account credentials cannot be decrypted.
+      DLA_ENCRYPTION_KEY: "" # CHANGE ME
+
+      DLA_LOG_LEVEL: "info"
+      DLA_DISABLE_DOCS: "false"
+      DLA_MAX_ATTACHMENT_SIZE_MB: "25"
+
+      # Optional: outbound system mail (password-reset emails).
+      # DLA_SMTP_HOST: "smtp.example.com"
+      # DLA_SMTP_PORT: "465"
+      # DLA_SMTP_SECURE: "true"
+      # DLA_SMTP_USERNAME: "noreply@example.com"
+      # DLA_SMTP_PASSWORD: ""
+      # DLA_SMTP_FROM: "Delivr <noreply@example.com>"
+    volumes:
+      - ./data:/opt/delivr/api/data
+      - ./config:/opt/delivr/api/config
+
+  delivr-web:
+    image: ghcr.io/delivr-project/delivr-web:latest
+    container_name: delivr-web
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:14128:14128"
+    environment:
+      # Public URL of the API including /v1. Your browser calls this URL directly.
+      NUXT_PUBLIC_API_URL: "https://api.mail.example.com/v1" # CHANGE ME
+      # Public URL of this web client.
+      NUXT_PUBLIC_APP_URL: "https://mail.example.com" # CHANGE ME
+      NUXT_PUBLIC_IS_SIGNUP_ENABLED: "false"
+    depends_on:
+      delivr-api:
+        condition: service_healthy
