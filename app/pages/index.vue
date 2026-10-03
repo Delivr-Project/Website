@@ -198,7 +198,7 @@ const faqs = [
 						class="group mb-8 inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 py-1 pr-3 pl-1 text-sm text-sky-200 transition hover:border-sky-400/60"
 					>
 						<span class="rounded-full bg-sky-400 px-2 py-0.5 text-xs font-semibold text-black">1.0</span>
-						Delivr 1.0 is almost here — see what's next
+						Delivr 1.0 is here — see what's next
 						<UIcon name="i-lucide-arrow-right" class="transition-transform group-hover:translate-x-0.5" />
 					</NuxtLink>
 

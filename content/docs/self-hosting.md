@@ -37,7 +37,7 @@ Delivr does **not** include a mail server. Each user connects their own mailboxe
 
 ### Server
 
-- A Linux server with **1 vCPU and 1 GB RAM** — plenty for a family or a small team. The container images are built for **x86-64**; on ARM64, use the [manual installation](/docs/self-hosting/manual).
+- A Linux server with **1 vCPU and 2 GB RAM** — plenty for a family or a small team. The container images are built for **x86-64**; on ARM64, use the [manual installation](/docs/self-hosting/manual).
 - **Docker Engine 24+** with the Compose plugin, *or* [Bun 1.x](https://bun.sh) for a manual install.
 - A few hundred MB of disk. Delivr does not store mail, so the database stays small.
 
