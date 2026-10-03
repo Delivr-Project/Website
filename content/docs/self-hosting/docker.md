@@ -51,6 +51,7 @@ services:
     environment:
       DLA_APP_URL: "https://mail.example.com"
       DLA_ENCRYPTION_KEY: "" # openssl rand -hex 32
+      DLA_TRUST_PROXY: "true" # only reachable via your reverse proxy
       DLA_LOG_LEVEL: "info"
       DLA_DISABLE_DOCS: "false"
       DLA_MAX_ATTACHMENT_SIZE_MB: "25"

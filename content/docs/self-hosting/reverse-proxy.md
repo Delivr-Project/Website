@@ -21,6 +21,7 @@ All examples use:
 - **Serve HTTPS.** Browsers only install PWAs and keep secure cookies on HTTPS origins.
 - **Allow large request bodies on the API.** Sending a mail with attachments can be up to `DLA_MAX_ATTACHMENT_SIZE_MB` + 16 MB — **41 MB** with the defaults. Many proxies default to 1 MB.
 - **Allow slow responses.** Some IMAP operations (large folders, big attachments, slow mail servers) take longer than typical web requests. A read timeout of 120 seconds is a safe choice.
+- **Forward the client address.** Login rate limiting needs to tell clients apart. All examples below pass it on in `X-Forwarded-For` — set `DLA_TRUST_PROXY=true` on the API so Delivr uses it.
 - **Not cache API responses.** Delivr sends `Cache-Control: no-store` for attachments; don't override it.
 
 ## Configurations

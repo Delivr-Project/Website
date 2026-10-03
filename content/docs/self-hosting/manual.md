@@ -67,6 +67,8 @@ DLA_ENCRYPTION_KEY=<output of: openssl rand -hex 32>
 # Only listen on localhost — the reverse proxy is the public entry point
 DLA_API_HOST=127.0.0.1
 DLA_API_PORT=14123
+# Only the local reverse proxy can reach the API, so trust the client address it forwards
+DLA_TRUST_PROXY=true
 
 DLA_DB_CONNECTION_URL=./data/db.sqlite
 DLA_DB_MIGRATION_DIR=./drizzle/migrations/sqlite

@@ -41,5 +41,4 @@ export const repositories: Repository[] = [
 export const docsEditBaseUrl = "https://github.com/Delivr-Project/Website/edit/main/content";
 
 /** Where security issues should be reported privately. */
-export const securityAdvisoryUrl =
-	"https://github.com/Delivr-Project/Delivr-API/security/advisories/new";
+export const securityMailto = "mailto:support@delivr.email?subject=Security";

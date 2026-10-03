@@ -175,7 +175,7 @@ const faqs = [
 	{
 		label: "How do I report a security issue?",
 		content:
-			"Please report vulnerabilities privately through GitHub Security Advisories instead of opening a public issue. See the Security page for details.",
+			"Please report vulnerabilities privately to support@delivr.email instead of opening a public issue. See the Security page for details.",
 	},
 ];
 </script>

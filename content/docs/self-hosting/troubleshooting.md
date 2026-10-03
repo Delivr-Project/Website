@@ -96,6 +96,8 @@ Delivr accepted the attachments, but the mail provider refused the message. Atta
 
 After repeated failed sign-ins, Delivr refuses further attempts for that username for up to five minutes. Wait and try again. The counters are kept in memory, so restarting the API also clears them.
 
+If **everyone** gets locked out as soon as one person mistypes their password a few times, Delivr is behind a reverse proxy but can't see the real client addresses. Set `DLA_TRUST_PROXY=true` — see [Rate limiting at the proxy](/docs/self-hosting/hardening#rate-limiting-at-the-proxy).
+
 ## Attachment previews fail, downloads work
 
 Previews are streamed through the web client's server, which calls the API at its **public** URL. Make sure the server running Delivr Web can resolve and reach `NUXT_PUBLIC_API_URL` — test from inside the container:

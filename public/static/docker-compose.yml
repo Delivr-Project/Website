@@ -22,6 +22,10 @@ services:
       # mail-account credentials cannot be decrypted.
       DLA_ENCRYPTION_KEY: "" # CHANGE ME
 
+      # The API is only reachable through your reverse proxy (see `ports`), so it
+      # can trust the client address the proxy forwards for login rate limiting.
+      DLA_TRUST_PROXY: "true"
+
       DLA_LOG_LEVEL: "info"
       DLA_DISABLE_DOCS: "false"
       DLA_MAX_ATTACHMENT_SIZE_MB: "25"

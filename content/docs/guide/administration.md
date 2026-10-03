@@ -38,7 +38,7 @@ Set a new password for a user who is locked out. This signs the user out of all 
 
 ### Delete a user
 
-Deleting a user signs them out everywhere, revokes their API keys, and removes their Delivr account. **Their mail is not affected** — it stays on their mail servers.
+Deleting a user signs them out everywhere, revokes their API keys, and removes their Delivr account together with everything stored for it: connected mail accounts and their encrypted credentials, sender identities and signatures, folder mappings, and preferences. **Their mail is not affected** — it stays on their mail servers.
 
 ## What administrators can see
 

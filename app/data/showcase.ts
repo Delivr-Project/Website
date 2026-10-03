@@ -15,11 +15,11 @@ export interface Screenshot {
 
 export const heroScreenshots: { desktop: Screenshot; mobile: Screenshot } = {
 	desktop: {
-		src: null,
+		src: "/static/screenshots/desktop.webp",
 		alt: "Delivr Web on a laptop, showing the folder sidebar, the message list, and an open email",
 	},
 	mobile: {
-		src: null,
+		src: "/static/screenshots/mobile.webp",
 		alt: "Delivr installed as an app on a phone, showing the inbox",
 	},
 };

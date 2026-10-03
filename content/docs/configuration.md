@@ -37,6 +37,7 @@ After changing a variable, restart the affected service: `docker compose up -d` 
 | --- | --- | --- |
 | `DLA_API_HOST` | `::` | Address to bind to. Use `127.0.0.1` for a manual install behind a local reverse proxy. |
 | `DLA_API_PORT` | `14123` | Port to listen on. |
+| `DLA_TRUST_PROXY` | `false` | Set to `true` when the API is only reachable through your reverse proxy. Login rate limiting then tells clients apart by the address in `X-Forwarded-For` instead of treating every request as coming from the proxy. Don't enable it while the API port is publicly reachable — clients could forge the header. |
 | `DLA_LOG_LEVEL` | `info` | One of `debug`, `info`, `warn`, `error`, `critical`. |
 | `DLA_LOG_DIR` | `./data/logs` | Directory for log files. |
 | `DLA_CONFIG_BASE_DIR` | `./config` | Directory for generated setup files, such as the initial admin link. |
@@ -47,7 +48,7 @@ After changing a variable, restart the affected service: `docker compose up -d` 
 | Variable | Default | Description |
 | --- | --- | --- |
 | `DLA_DB_CONNECTION_URL` | `./data/db.sqlite` | Path of the SQLite database file. The directory is created if it doesn't exist. |
-| `DLA_DB_AUTO_MIGRATE` | `false` | Apply pending migrations on start. You rarely need to set it: `bun run start` and the container image always apply migrations. |
+| `DLA_DB_AUTO_MIGRATE` | `true` | Apply pending migrations on start. `bun run start` and the container image always apply them, whatever this is set to. |
 
 ### Attachments
 

@@ -17,7 +17,7 @@ Delivr ships with secure defaults — encrypted credentials, hashed tokens, no m
 - [ ] Secret files have `600` permissions
 - [ ] Self-service sign-up is disabled
 - [ ] The API reference is disabled if you don't need it
-- [ ] The login endpoint is rate-limited at the proxy
+- [ ] `DLA_TRUST_PROXY=true` is set, and the login endpoint is also rate-limited at the proxy
 - [ ] Security headers are set on the web client
 - [ ] Backups are encrypted and stored off-site
 - [ ] You're watching for new releases
@@ -68,7 +68,9 @@ DLA_DISABLE_DOCS=true
 
 ## Rate limiting at the proxy
 
-Delivr limits failed sign-ins in memory, but behind a reverse proxy it can't reliably tell clients apart. Add a limit at the proxy as well — for example with Nginx:
+Delivr limits failed sign-ins in memory — five per client and username, fifteen per username, in any five-minute window. Behind a reverse proxy, every request comes from the proxy's address, so set `DLA_TRUST_PROXY=true` to have Delivr use the client address from `X-Forwarded-For` instead. Only do this when the API port is reachable solely through the proxy (as in the [Docker Compose file](/docs/self-hosting/docker)); otherwise clients could forge the header.
+
+For defense in depth, add a limit at the proxy as well — for example with Nginx:
 
 ```nginx
 # In the http {} block

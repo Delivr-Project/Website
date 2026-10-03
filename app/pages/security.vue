@@ -2,7 +2,7 @@
 import CtaSection from "~/components/marketing/CtaSection.vue";
 import PageHero from "~/components/marketing/PageHero.vue";
 import SectionHeading from "~/components/marketing/SectionHeading.vue";
-import { securityAdvisoryUrl } from "~/data/project";
+import { securityMailto } from "~/data/project";
 
 usePageSeo({
 	title: "Security — Delivr",
@@ -298,13 +298,8 @@ const upcoming = [
 						</p>
 						<ol class="list-decimal space-y-2 pl-5 text-slate-400">
 							<li>
-								Report it through a
-								<NuxtLink :to="securityAdvisoryUrl" target="_blank" class="text-sky-400 hover:underline">
-									private GitHub Security Advisory</NuxtLink
-								>, or email
-								<NuxtLink to="mailto:support@delivr.email" class="text-sky-400 hover:underline">
-									support@delivr.email</NuxtLink
-								>
+								Email
+								<NuxtLink :to="securityMailto" class="text-sky-400 hover:underline">support@delivr.email</NuxtLink>
 								with “Security” in the subject.
 							</li>
 							<li>Include the affected component and version, steps to reproduce, and the impact you see.</li>
@@ -316,23 +311,17 @@ const upcoming = [
 						</p>
 					</div>
 					<div class="mt-8 flex flex-col gap-3 sm:flex-row">
-						<UButton
-							:to="securityAdvisoryUrl"
-							target="_blank"
-							color="primary"
-							icon="i-lucide-shield-alert"
-							class="justify-center"
-						>
-							Open a private advisory
+						<UButton :to="securityMailto" color="primary" icon="i-lucide-mail" class="justify-center">
+							Report a vulnerability
 						</UButton>
 						<UButton
-							to="mailto:support@delivr.email"
+							to="/docs/contributing"
 							color="neutral"
 							variant="outline"
-							icon="i-lucide-mail"
+							icon="i-lucide-bug"
 							class="justify-center"
 						>
-							Email the team
+							Report a regular bug
 						</UButton>
 					</div>
 				</div>
