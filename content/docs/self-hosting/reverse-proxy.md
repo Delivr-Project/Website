@@ -251,8 +251,8 @@ mail.example.com {
 
 Then configure:
 
-- `NUXT_PUBLIC_API_URL=https://mail.example.com/api/v1`
-- `NUXT_PUBLIC_APP_URL=https://mail.example.com`
+- `DELIVR_API_URL=https://mail.example.com/api/v1`
+- `DELIVR_APP_URL=https://mail.example.com`
 - `DLA_APP_URL=https://mail.example.com`
 
 ::caution

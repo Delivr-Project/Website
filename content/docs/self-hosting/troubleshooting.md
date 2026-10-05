@@ -60,11 +60,11 @@ Restart the API after changing it.
 
 Symptoms: in the browser's network tab, API requests go to `http://localhost:14123/v1` instead of your API domain.
 
-The container image is configured at **runtime** with `NUXT_PUBLIC_API_URL`. The `DELIVR_API_URL` variable from the web client's `example.env` is only read when building from source. Set:
+The container image is configured at **runtime** with `DELIVR_API_URL`. The `DELIVR_API_URL` variable from the web client's `example.env` is only read when building from source. Set:
 
 ```yaml
-NUXT_PUBLIC_API_URL: "https://api.mail.example.com/v1"
-NUXT_PUBLIC_APP_URL: "https://mail.example.com"
+DELIVR_API_URL: "https://api.mail.example.com/v1"
+DELIVR_APP_URL: "https://mail.example.com"
 ```
 
 …and recreate the container with `docker compose up -d`.
@@ -100,7 +100,7 @@ If **everyone** gets locked out as soon as one person mistypes their password a 
 
 ## Attachment previews fail, downloads work
 
-Previews are streamed through the web client's server, which calls the API at its **public** URL. Make sure the server running Delivr Web can resolve and reach `NUXT_PUBLIC_API_URL` — test from inside the container:
+Previews are streamed through the web client's server, which calls the API at its **public** URL. Make sure the server running Delivr Web can resolve and reach `DELIVR_API_URL` — test from inside the container:
 
 ```bash
 sudo docker compose exec delivr-web curl -sf https://api.mail.example.com/health

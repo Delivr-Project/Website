@@ -53,7 +53,7 @@ Docker publishes ports by editing iptables directly, which bypasses `ufw`. That'
 
 ## Accounts and access
 
-- Keep `NUXT_PUBLIC_IS_SIGNUP_ENABLED=false` and create users from **Admin → Users**.
+- Keep `DELIVR_ENABLE_SIGNUP=false` and create users from **Admin → Users**.
 - Give the **Admin** role to as few people as possible.
 - Remove accounts of people who leave.
 - Encourage users to give **API keys** a description and an expiry date, and to revoke keys they no longer use.

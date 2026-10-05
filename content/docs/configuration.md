@@ -90,21 +90,21 @@ The web client reads its settings at **runtime**, so the same build or container
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `NUXT_PUBLIC_API_URL` | `http://localhost:14123/v1` | Public URL of the API, **including `/v1`**. Your users' browsers call this URL directly, so it must be reachable from the internet. |
-| `NUXT_PUBLIC_APP_URL` | `http://localhost:14128` | Public URL of the web client itself. |
-| `NUXT_PUBLIC_IS_SIGNUP_ENABLED` | `false` | Show a sign-up link on the login page. Keep it `false` and create users as an admin. |
+| `DELIVR_API_URL` | `http://localhost:14123/v1` | Public URL of the API, **including `/v1`**. Your users' browsers call this URL directly, so it must be reachable from the internet. |
+| `DELIVR_APP_URL` | `http://localhost:14128` | Public URL of the web client itself. |
+| `DELIVR_ENABLE_SIGNUP` | `false` | Show a sign-up link on the login page. Keep it `false` and create users as an admin. |
 | `NITRO_PORT` / `PORT` | `14128` | Port the web server listens on. |
 | `NITRO_HOST` / `HOST` | `::` in the container | Address the web server binds to. |
 
 ### Build-time variables
 
-When you build the web client from source, you can bake in defaults through a `.env` file (see `example.env`). The `NUXT_PUBLIC_*` variables above always take precedence at runtime.
+When you build the web client from source, you can bake in defaults through a `.env` file (see `example.env`). The `DELIVR_*` variables above always take precedence at runtime.
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `DELIVR_API_URL` | `http://localhost:14123/v1` | Build-time default for `NUXT_PUBLIC_API_URL`. |
-| `DELIVR_APP_URL` | `http://localhost:14128` | Build-time default for `NUXT_PUBLIC_APP_URL`. |
-| `DELIVR_ENABLE_SIGNUP` | `false` | Build-time default for `NUXT_PUBLIC_IS_SIGNUP_ENABLED`. |
+| `DELIVR_API_URL` | `http://localhost:14123/v1` | Build-time default for `DELIVR_API_URL`. |
+| `DELIVR_APP_URL` | `http://localhost:14128` | Build-time default for `DELIVR_APP_URL`. |
+| `DELIVR_ENABLE_SIGNUP` | `false` | Build-time default for `DELIVR_ENABLE_SIGNUP`. |
 | `USE_DEV_PROXY` | `false` | Development only: route API calls through Nuxt's dev proxy. |
 
 ## Ports at a glance

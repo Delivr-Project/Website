@@ -73,9 +73,9 @@ services:
     ports:
       - "127.0.0.1:14128:14128"
     environment:
-      NUXT_PUBLIC_API_URL: "https://api.mail.example.com/v1"
-      NUXT_PUBLIC_APP_URL: "https://mail.example.com"
-      NUXT_PUBLIC_IS_SIGNUP_ENABLED: "false"
+      DELIVR_API_URL: "https://api.mail.example.com/v1"
+      DELIVR_APP_URL: "https://mail.example.com"
+      DELIVR_ENABLE_SIGNUP: "false"
     depends_on:
       delivr-api:
         condition: service_healthy
@@ -97,8 +97,8 @@ Paste the output into `DLA_ENCRYPTION_KEY`. It must be **at least 32 characters*
 
 Replace the example domains:
 
-- `DLA_APP_URL` and `NUXT_PUBLIC_APP_URL` → the web client's public URL, e.g. `https://mail.example.com`
-- `NUXT_PUBLIC_API_URL` → the API's public URL **including `/v1`**, e.g. `https://api.mail.example.com/v1`
+- `DLA_APP_URL` and `DELIVR_APP_URL` → the web client's public URL, e.g. `https://mail.example.com`
+- `DELIVR_API_URL` → the API's public URL **including `/v1`**, e.g. `https://api.mail.example.com/v1`
 
 Use `https://` URLs without a trailing slash.
 

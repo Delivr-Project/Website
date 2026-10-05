@@ -137,7 +137,7 @@ The build output lands in `.output/`.
 
 ### Create the systemd service
 
-The web client is configured at runtime with `NUXT_PUBLIC_*` variables, so one build works for any domain:
+The web client is configured at runtime with `DELIVR_*` variables, so one build works for any domain:
 
 ```ini [/etc/systemd/system/delivr-web.service]
 [Unit]
@@ -150,9 +150,9 @@ Type=simple
 User=delivr
 Group=delivr
 WorkingDirectory=/opt/delivr/web
-Environment=NUXT_PUBLIC_API_URL=https://api.mail.example.com/v1
-Environment=NUXT_PUBLIC_APP_URL=https://mail.example.com
-Environment=NUXT_PUBLIC_IS_SIGNUP_ENABLED=false
+Environment=DELIVR_API_URL=https://api.mail.example.com/v1
+Environment=DELIVR_APP_URL=https://mail.example.com
+Environment=DELIVR_ENABLE_SIGNUP=false
 Environment=NITRO_HOST=127.0.0.1
 Environment=NITRO_PORT=14128
 ExecStart=/usr/local/bin/bun run .output/server/index.mjs

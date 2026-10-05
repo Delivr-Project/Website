@@ -49,10 +49,10 @@ services:
       - "127.0.0.1:14128:14128"
     environment:
       # Public URL of the API including /v1. Your browser calls this URL directly.
-      NUXT_PUBLIC_API_URL: "https://api.mail.example.com/v1" # CHANGE ME
+      DELIVR_API_URL: "https://api.mail.example.com/v1" # CHANGE ME
       # Public URL of this web client.
-      NUXT_PUBLIC_APP_URL: "https://mail.example.com" # CHANGE ME
-      NUXT_PUBLIC_IS_SIGNUP_ENABLED: "false"
+      DELIVR_APP_URL: "https://mail.example.com" # CHANGE ME
+      DELIVR_ENABLE_SIGNUP: "false"
     depends_on:
       delivr-api:
         condition: service_healthy

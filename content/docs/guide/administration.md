@@ -54,7 +54,7 @@ Whoever operates the server holds the encryption key and has technical access to
 
 ## Sign-ups
 
-By default, only admins can create accounts. Keep it that way for private instances: leave `NUXT_PUBLIC_IS_SIGNUP_ENABLED` set to `false`.
+By default, only admins can create accounts. Keep it that way for private instances: leave `DELIVR_ENABLE_SIGNUP` set to `false`.
 
 ## Good practice
 
