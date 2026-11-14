@@ -231,32 +231,82 @@ curl https://api.mail.example.com/health
 
 Then open `https://mail.example.com`. You should see the Delivr sign-in page. If the page loads but signing in fails, jump to [Troubleshooting](/docs/self-hosting/troubleshooting#sign-in-fails-or-cors-errors) — it's almost always a mismatch between `DLA_APP_URL` and the web client's URL.
 
-## Single domain (advanced)
+## One domain for both (faster)
 
-If you can only use one domain, you can serve the API under a path such as `/api` and strip that prefix in the proxy. The browser then talks to the same origin, so no cross-origin requests are involved.
+You can serve the API on the web client's domain by forwarding the `/v1` path to it. The browser then talks to a single origin, which makes every API call cheaper:
+
+- **No preflight requests.** With the API on its own domain, the browser asks for permission (`OPTIONS`) before the first request to every new URL — each mail, each folder. On one origin it doesn't.
+- **One connection.** No second DNS lookup and TLS handshake for the API domain.
+
+This also works if you only have one domain. If you keep `api.mail.example.com` as well, the API reference and your scripts continue to use it unchanged.
+
+::tabs
+
+:::tabs-item{label="Caddy" icon="i-lucide-shield-check"}
 
 ```caddy [/etc/caddy/Caddyfile]
 mail.example.com {
-	handle_path /api/* {
+	handle /v1/* {
 		request_body {
 			max_size 50MB
 		}
 		reverse_proxy 127.0.0.1:14123
 	}
 	handle {
+		encode zstd gzip
 		reverse_proxy 127.0.0.1:14128
 	}
 }
 ```
 
-Then configure:
+:::
 
-- `DELIVR_API_URL=https://mail.example.com/api/v1`
+:::tabs-item{label="Nginx" icon="i-lucide-server"}
+
+Add this inside the web client's `server` block, before `location /`:
+
+```nginx [/etc/nginx/sites-available/delivr.conf]
+    location /v1/ {
+        client_max_body_size 50m;
+
+        proxy_pass http://127.0.0.1:14123;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 120s;
+        proxy_send_timeout 120s;
+    }
+```
+
+:::
+
+:::tabs-item{label="Apache" icon="i-lucide-feather"}
+
+Add this inside the web client's `VirtualHost`, before `ProxyPass /`:
+
+```apache [/etc/apache2/sites-available/delivr.conf]
+    # 50 MB — must be larger than DLA_MAX_ATTACHMENT_SIZE_MB + 16 MB
+    <Location /v1/>
+        LimitRequestBody 52428800
+    </Location>
+    ProxyPass        /v1/ http://127.0.0.1:14123/v1/ timeout=120
+    ProxyPassReverse /v1/ http://127.0.0.1:14123/v1/
+```
+
+:::
+
+::
+
+Then point the web client at it:
+
+- `DELIVR_API_URL=https://mail.example.com/v1`
 - `DELIVR_APP_URL=https://mail.example.com`
 - `DLA_APP_URL=https://mail.example.com`
 
 ::caution
-`handle_path` removes the `/api` prefix before forwarding, so the API still receives `/v1/…`. Don't forward the prefix — the API doesn't know about it. The interactive API reference also expects to live at the root of its domain, so with this layout it won't load correctly; set `DLA_DISABLE_DOCS=true` or use a separate API domain if you need it.
+Forward `/v1` as it is — don't move the API under another prefix such as `/api`. The API only knows its own paths, and the web client serves files of its own under `/api/`. The interactive API reference lives outside `/v1`, so it is only reachable on a separate API domain; set `DLA_DISABLE_DOCS=true` if you don't have one.
 ::
 
 ## Next steps
