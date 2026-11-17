@@ -233,7 +233,7 @@ Then open `https://mail.example.com`. You should see the Delivr sign-in page. If
 
 ## One domain for both (faster)
 
-You can serve the API on the web client's domain by forwarding the `/v1` path to it. The browser then talks to a single origin, which makes every API call cheaper:
+You can serve the API on the web client's domain by forwarding the `/api/v1` path to it. The browser then talks to a single origin, which makes every API call cheaper:
 
 - **No preflight requests.** With the API on its own domain, the browser asks for permission (`OPTIONS`) before the first request to every new URL — each mail, each folder. On one origin it doesn't.
 - **One connection.** No second DNS lookup and TLS handshake for the API domain.
@@ -246,10 +246,11 @@ This also works if you only have one domain. If you keep `api.mail.example.com` 
 
 ```caddy [/etc/caddy/Caddyfile]
 mail.example.com {
-	handle /v1/* {
+	handle /api/v1/* {
 		request_body {
 			max_size 50MB
 		}
+		uri strip_prefix /api
 		reverse_proxy 127.0.0.1:14123
 	}
 	handle {
@@ -266,10 +267,10 @@ mail.example.com {
 Add this inside the web client's `server` block, before `location /`:
 
 ```nginx [/etc/nginx/sites-available/delivr.conf]
-    location /v1/ {
+    location /api/v1/ {
         client_max_body_size 50m;
 
-        proxy_pass http://127.0.0.1:14123;
+        proxy_pass http://127.0.0.1:14123/v1/;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -288,11 +289,11 @@ Add this inside the web client's `VirtualHost`, before `ProxyPass /`:
 
 ```apache [/etc/apache2/sites-available/delivr.conf]
     # 50 MB — must be larger than DLA_MAX_ATTACHMENT_SIZE_MB + 16 MB
-    <Location /v1/>
+    <Location /api/v1/>
         LimitRequestBody 52428800
     </Location>
-    ProxyPass        /v1/ http://127.0.0.1:14123/v1/ timeout=120
-    ProxyPassReverse /v1/ http://127.0.0.1:14123/v1/
+    ProxyPass        /api/v1/ http://127.0.0.1:14123/v1/ timeout=120
+    ProxyPassReverse /api/v1/ http://127.0.0.1:14123/v1/
 ```
 
 :::
@@ -301,12 +302,12 @@ Add this inside the web client's `VirtualHost`, before `ProxyPass /`:
 
 Then point the web client at it:
 
-- `DELIVR_API_URL=https://mail.example.com/v1`
+- `DELIVR_API_URL=https://mail.example.com/api/v1`
 - `DELIVR_APP_URL=https://mail.example.com`
 - `DLA_APP_URL=https://mail.example.com`
 
 ::caution
-Forward `/v1` as it is — don't move the API under another prefix such as `/api`. The API only knows its own paths, and the web client serves files of its own under `/api/`. The interactive API reference lives outside `/v1`, so it is only reachable on a separate API domain; set `DLA_DISABLE_DOCS=true` if you don't have one.
+Forward only `/api/v1` and strip the `/api` prefix as shown — the API itself serves its routes under `/v1`, and the web client serves files of its own elsewhere under `/api/`. The interactive API reference lives outside `/v1`, so it is only reachable on a separate API domain; set `DLA_DISABLE_DOCS=true` if you don't have one.
 ::
 
 ## Next steps
